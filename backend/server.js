@@ -28,8 +28,7 @@ app.get("/benevoles", async (req, res) => {
   
 });
 
-
-
+// Ajouter un nouveau bénévole
 app.post("/benevoles", async (req, res) => {
   const { id, nom,prenom , nbr_points,nbr_dechets,ville } = req.body;
   if (!nom) return res.status(400).json({ error: "Le champ nom" });
