@@ -3,7 +3,6 @@ import cors from "cors";
 import { neon } from "@neondatabase/serverless";
 import "dotenv/config";
 
-
 // Connexion à PostgreSQL
 const db = neon(process.env.DATABASE_URL);
 const app = express();
@@ -32,46 +31,74 @@ app.get("/benevoles", async (req, res) => {
 
 
 app.post("/benevoles", async (req, res) => {
-  const { nom,prenom , nbr_points,nbr_dechets,ville } = req.body;
+  const { id, nom,prenom , nbr_points,nbr_dechets,ville } = req.body;
   if (!nom) return res.status(400).json({ error: "Le champ nom" });
   try {
-    const result = await db`
-      INSERT INTO benevoles (nom, prenom, nbr_points,nbr_dechets,ville)
-      VALUES (${nom}, ${prenom}, ${nbr_points}, ${nbr_dechets}, ${ville})
-      RETURNING *;
-    `;
-    console.log("Nouveau bénévole ajouté :", result[0]);
-    res.status(201).json(result[0]);
-  } catch {
+    console.log(req.body);
+    const result = await db.query(`
+      INSERT INTO benevoles (id, nom, prenom, nbr_points,nbr_dechets,ville)
+      VALUES ($1, $2, $3, $4, $5, $6)
+      RETURNING *;`, [id, nom, prenom, nbr_points,nbr_dechets,ville]);
+      console.log("Nouveau bénévole ajouté :", result[0]);
+      res.status(201).json(result[0]);
+    } catch (err) {
+    console.log(err);
     res.status(500).json({ error: "Impossible d'ajouter le benevole" });
   }
 });
 
-/*app.put("/benevoles/:id", async (req, res) => {
-  const { id } = req.params;
+
+// Supprimer un bénévole par nom et prénom
+app.delete("/benevoles", async (req, res) => {
+  const { nom, prenom } = req.body; // récupération depuis le body
+
+  if (!nom && !prenom) {
+    return res.status(400).json({ error: "Nom et prénom sont requis" });
+  }
+  try {
+    const result = await db`
+      DELETE FROM benevoles
+      WHERE nom = ${nom} AND prenom = ${prenom}
+      RETURNING *;
+    `;
+    if (result.length > 0) {
+      res.status(200).json({ message: "Bénévole supprimé", data: result });
+    } else {
+      res.status(404).json({ error: "Bénévole introuvable" });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Erreur serveur" });
+  }
+});
+
+
+
+
+
+// Mettre à jour un bénévole par nom et prénom
+app.put("/benevoles/:id", async (req, res) => {
+  // const { id } = req.params;
+
   const { nom, prenom, nbr_points, nbr_dechets, ville } = req.body;
 
   // Vérifier que le champ "nom" est présent (comme dans ton POST)
-  if (!nom) {
-    return res.status(400).json({ error: "Le champ nom est obligatoire" });
+  if (!nom && !prenom) {
+    return res.status(400).json({ error: "Les champs nom et prénom sont obligatoires" });
   }
-
   try {
     const result = await db`
       UPDATE benevoles
-      SET nom = ${nom},
-          prenom = ${prenom},
+      SET 
           nbr_points = ${nbr_points},
           nbr_dechets = ${nbr_dechets},
           ville = ${ville}
-      WHERE id = ${id}
+      WHERE nom = ${nom},prenom = ${prenom},
       RETURNING *;
     `;
-
     if (result.length === 0) {
       return res.status(404).json({ error: "Bénévole introuvable" });
     }
-
     res.json(result[0]); //   Retourne le bénévole mis à jour
   } catch (err) {
     console.error(err);
@@ -81,8 +108,6 @@ app.post("/benevoles", async (req, res) => {
 
 
 
-
-*/
 const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`🚀 Serveur lancé sur http://localhost:${PORT}`);
