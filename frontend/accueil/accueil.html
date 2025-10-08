@@ -1,17 +1,72 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel = "stylesheet" href="style.css">
-    <script src="accueil.js" defer></script>
+    <title>ADACTION - Plateforme Éco-Citoyenne</title>
+    <link rel="stylesheet" href="/frontend/accueil/accueil.css">
+    <script src="/frontend/accueil/accueil.js" defer></script>
 </head>
 <body>
-    <h1>Bienvenue chez ADACTION</h1>
-    <p>Si vous êtes une association</p>
-    <button id="asso">Association</button>
-    <p>Si vous êtes un bénévole</p>
-    <button id="benevole">Bénévole</button>
+    <div class="container">
+        <!-- En-tête -->
+        <header class="header">
+            <div class="logo">
+                <span class="logo-icon">🌱</span>
+                <h1>ADACTION</h1>
+            </div>
+            <p class="tagline">Agissons ensemble pour notre planète</p>
+        </header>
+
+        <!-- Contenu principal -->
+        <main class="main-content">
+            <section class="welcome-section">
+                <h2 class="welcome-title">Bienvenue sur notre plateforme</h2>
+                <p class="welcome-text">Rejoignez la communauté des acteurs du changement</p>
+            </section>
+
+            <section class="choice-section">
+                <div class="choice-card">
+                    <div class="choice-icon">🏢</div>
+                    <div class="choice-content">
+                        <h3>Vous êtes une association</h3>
+                        <p>Gérez vos actions et bénévoles</p>
+                        <button id="asso" class="choice-btn">
+                            <span class="btn-icon">→</span>
+                            Espace Association
+                        </button>
+                    </div>
+                </div>
+
+                <div class="choice-card">
+                    <div class="choice-icon">👥</div>
+                    <div class="choice-content">
+                        <h3>Vous êtes un bénévole</h3>
+                        <p>Participez aux actions de collecte</p>
+                        <button id="benevole" class="choice-btn">
+                            <span class="btn-icon">→</span>
+                            Espace Bénévole
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-container">
+                <div class="footer-content">
+                    <p class="copyright">&copy; 2025 ADACTION. Tous droits réservés.</p>
+                    <nav class="footer-nav">
+                        <a href="#" class="footer-link">Mentions légales</a>
+                        <span class="separator">|</span>
+                        <a href="#" class="footer-link">Politique de confidentialité</a>
+                        <span class="separator">|</span>
+                        <a href="#" class="footer-link">Contact</a>
+                    </nav>
+                </div>
+            </div>
+        </footer>
+    </div>
 </body>
 </html>
