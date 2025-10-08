@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EcoAction Solidaire</title>
+  <link rel="stylesheet" href="benevole.css">
+  <script src="benevoles.js" defer></script>
+</head>
+<body>
+  <h1>EcoAction Solidaire</h1>
+  <h2>Collecte du jour</h2>
+  <h3 id="localisation">Localisation : </h3>
+
+  <div class="champ">
+    <label for="select-personne">Bénévoles :</label>
+    <select id="select-personne">
+      <option value="">Chargement...</option>
+    </select>
+  </div>
+
+  <div class="catégorie">
+    <p>🚬</p>
+    <button onclick="changerCompteur('megots', -1)">-</button>
+    <span id="megots" class="compteur">0</span>
+    <button onclick="changerCompteur('megots', 1)">+</button>
+  </div>
+
+  <div class="catégorie">
+    <p>🥤</p>
+    <button onclick="changerCompteur('plastique', -1)">-</button>
+    <span id="plastique" class="compteur">0</span>
+    <button onclick="changerCompteur('plastique', 1)">+</button>
+  </div>
+
+  <div class="catégorie">
+    <p>🍾</p>
+    <button onclick="changerCompteur('verre', -1)">-</button>
+    <span id="verre" class="compteur">0</span>
+    <button onclick="changerCompteur('verre', 1)">+</button>
+  </div>
+
+  <div class="catégorie">
+    <p>🐟</p>
+    <button onclick="changerCompteur('peche', -1)">-</button>
+    <span id="peche" class="compteur">0</span>
+    <button onclick="changerCompteur('peche', 1)">+</button>
+  </div>
+
+  <div class="catégorie">
+    <p>🥫</p>
+    <button onclick="changerCompteur('cannette', -1)">-</button>
+    <span id="cannette" class="compteur">0</span>
+    <button onclick="changerCompteur('cannette', 1)">+</button>
+  </div>
+
+  <button id="registerBtn">Enregistrer</button>
+</body>
+</html>
