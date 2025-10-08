@@ -1,12 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   const BASE = "http://localhost:3000/association";
-  const tbody = document.querySelector("#tableAsso tbody");
-  const totalContainer = document.getElementById("totauxBenevoles");
-
-  try { 
-    const debug = document.getElementById('debug');
-    if (debug) debug.innerText = "Script tabord.js chargé";
-  } catch {}
+  const container = document.getElementById("associations-container");
+  const totalAssociations = document.getElementById("total-associations");
 
   // --- Charger les associations ---
   async function charger() {
@@ -14,27 +9,61 @@ document.addEventListener("DOMContentLoaded", () => {
       const res = await fetch(BASE);
       if (!res.ok) throw new Error(`Erreur ${res.status}`);
       const data = await res.json();
-      tbody.innerHTML = "";
+
+      container.innerHTML = "";
 
       if (!Array.isArray(data) || data.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5">Aucune association trouvée.</td></tr>`;
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="icon">🏢</div>
+            <h3>Aucune association trouvée</h3>
+            <p>Commencez par créer votre première association</p>
+          </div>
+        `;
         return;
       }
 
-      data.forEach(asso => {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td>${asso.id ?? "—"}</td>
-          <td>${asso.nom ?? "—"}</td>
-          <td>${asso.description ?? "—"}</td>
-          <td>${asso.nbr_benevoles ?? 0}</td>
-          <td>${asso.argent ?? 0} €</td>
-        `;
-        tbody.appendChild(tr);
+      // Mettre à jour le compteur
+      totalAssociations.textContent = data.length;
+
+      // Créer les cartes avec animation progressive
+      data.forEach((asso, index) => {
+        setTimeout(() => {
+          const card = document.createElement("div");
+          card.className = "association-card";
+          card.style.animationDelay = `${index * 0.1}s`;
+          
+          card.innerHTML = `
+            <div class="card-header">
+              <!-- L'ID est masqué dans l'affichage -->
+            </div>
+            <h3 class="association-name">${asso.nom ?? "Association sans nom"}</h3>
+            <p class="association-description">${asso.description ?? "Aucune description disponible"}</p>
+            <div class="association-stats">
+              <div class="stat stat-benevoles">
+                <span class="stat-value">${asso.nbr_benevoles ?? 0}</span>
+                <span class="stat-label">Bénévoles</span>
+              </div>
+              <div class="stat stat-argent">
+                <span class="stat-value">${asso.argent ?? 0}€</span>
+                <span class="stat-label">Budget</span>
+              </div>
+            </div>
+          `;
+          
+          container.appendChild(card);
+        }, index * 100);
       });
+
     } catch (err) {
       console.error("Erreur chargement des associations :", err);
-      tbody.innerHTML = `<tr><td colspan="5">Erreur : ${err.message}</td></tr>`;
+      container.innerHTML = `
+        <div class="empty-state">
+          <div class="icon">❌</div>
+          <h3>Erreur de chargement</h3>
+          <p>${err.message}</p>
+        </div>
+      `;
     }
   }
 
@@ -129,7 +158,7 @@ document.addEventListener("DOMContentLoaded", () => {
       await resUpdate.json();
       alert("Bénévole mis à jour !");
 
-      // 🔹 Mettre à jour les totaux globaux après modification
+      // Mettre à jour les totaux globaux après modification
       await calculerEtAfficherTotaux();
       await compteurBenevoles(); 
     } catch (err) {
@@ -160,14 +189,8 @@ document.addEventListener("DOMContentLoaded", () => {
       else if(totalPoints >= 2000) totalEuros = 20;
       else if(totalPoints >= 1000) totalEuros = 10;
 
-      if(totalContainer) {
-        totalContainer.innerHTML = `
-          <div>Total bénévoles : ${nbrBenevoles}</div>
-          <div>Total collectes : ${totalDechets}</div>
-          <div>Total points : ${totalPoints}</div>
-          <div>Total reversé en euros : ${totalEuros} €</div>
-        `;
-      }
+      // Cette fonction n'est plus utilisée dans cette page mais on la garde au cas où
+      console.log("Totaux calculés:", { nbrBenevoles, totalDechets, totalPoints, totalEuros });
     } catch(err) {
       console.error("Erreur calcul des totaux :", err);
     }
@@ -196,18 +219,35 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  // --- Navigation ---
+  function setupNavigation() {
+    const btnAccueil = document.getElementById('btn-accueil');
+    const btnBenev = document.getElementById('btn-benev');
+
+    if (btnAccueil) {
+      btnAccueil.addEventListener('click', () => { 
+        window.location.href = '../accueil/accueil.html'; 
+      });
+    }
+
+    if (btnBenev) {
+      btnBenev.addEventListener('click', () => { 
+        window.location.href = '../benevliste/benevliste.html'; 
+      });
+    }
+  }
+
   // --- Initialisation ---
-  charger();
-  compteurBenevoles();
-  calculerEtAfficherTotaux();
-  mettreAJourNbrBenevoles();
-});
+  async function init() {
+    await charger();
+    await mettreAJourNbrBenevoles();
+    setupNavigation();
+    
+    // Ces fonctions sont pour d'autres pages mais on les garde pour compatibilité
+    compteurBenevoles();
+    calculerEtAfficherTotaux();
+  }
 
-// --- Navigation boutons ---
-document.addEventListener('DOMContentLoaded', () => {
-  const btnAccueil = document.getElementById('btn-accueil');
-  const btnBenev = document.getElementById('btn-benev');
-
-  if (btnAccueil) btnAccueil.addEventListener('click', () => { window.location.href = '../accueil/accueil.html'; });
-  if (btnBenev) btnBenev.addEventListener('click', () => { window.location.href = '../benevliste/benevliste.html'; });
+  // Démarrer l'application
+  init();
 });
