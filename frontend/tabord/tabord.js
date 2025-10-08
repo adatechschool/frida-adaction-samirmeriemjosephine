@@ -26,33 +26,30 @@ document.addEventListener("DOMContentLoaded", () => {
       // Mettre à jour le compteur
       totalAssociations.textContent = data.length;
 
-      // Créer les cartes avec animation progressive
-      data.forEach((asso, index) => {
-        setTimeout(() => {
-          const card = document.createElement("div");
-          card.className = "association-card";
-          card.style.animationDelay = `${index * 0.1}s`;
-          
-          card.innerHTML = `
-            <div class="card-header">
-              <!-- L'ID est masqué dans l'affichage -->
+      // Créer les cartes sans animation
+      data.forEach((asso) => {
+        const card = document.createElement("div");
+        card.className = "association-card";
+        
+        card.innerHTML = `
+          <div class="card-header">
+            <!-- L'ID est masqué dans l'affichage -->
+          </div>
+          <h3 class="association-name">${asso.nom ?? "Association sans nom"}</h3>
+          <p class="association-description">${asso.description ?? "Aucune description disponible"}</p>
+          <div class="association-stats">
+            <div class="stat stat-benevoles">
+              <span class="stat-value">${asso.nbr_benevoles ?? 0}</span>
+              <span class="stat-label">Bénévoles</span>
             </div>
-            <h3 class="association-name">${asso.nom ?? "Association sans nom"}</h3>
-            <p class="association-description">${asso.description ?? "Aucune description disponible"}</p>
-            <div class="association-stats">
-              <div class="stat stat-benevoles">
-                <span class="stat-value">${asso.nbr_benevoles ?? 0}</span>
-                <span class="stat-label">Bénévoles</span>
-              </div>
-              <div class="stat stat-argent">
-                <span class="stat-value">${asso.argent ?? 0}€</span>
-                <span class="stat-label">Budget</span>
-              </div>
+            <div class="stat stat-argent">
+              <span class="stat-value">${asso.argent ?? 0}€</span>
+              <span class="stat-label">Budget</span>
             </div>
-          `;
-          
-          container.appendChild(card);
-        }, index * 100);
+          </div>
+        `;
+        
+        container.appendChild(card);
       });
 
     } catch (err) {
@@ -189,7 +186,6 @@ document.addEventListener("DOMContentLoaded", () => {
       else if(totalPoints >= 2000) totalEuros = 20;
       else if(totalPoints >= 1000) totalEuros = 10;
 
-      // Cette fonction n'est plus utilisée dans cette page mais on la garde au cas où
       console.log("Totaux calculés:", { nbrBenevoles, totalDechets, totalPoints, totalEuros });
     } catch(err) {
       console.error("Erreur calcul des totaux :", err);
@@ -243,7 +239,6 @@ document.addEventListener("DOMContentLoaded", () => {
     await mettreAJourNbrBenevoles();
     setupNavigation();
     
-    // Ces fonctions sont pour d'autres pages mais on les garde pour compatibilité
     compteurBenevoles();
     calculerEtAfficherTotaux();
   }
