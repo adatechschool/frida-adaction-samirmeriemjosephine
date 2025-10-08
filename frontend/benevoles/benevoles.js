@@ -14,7 +14,6 @@ const pointsParType = {
   cannette: 15
 };
 
-
 // 🟩 Charger les bénévoles et collectes depuis le serveur
 async function loadData() {
   try {
@@ -31,7 +30,6 @@ async function loadData() {
     console.log("✅ Collectes :", collectes);
 
     remplirSelect();
-    await calculerEtAfficherTotaux(); // totaux dès le départ
   } catch (err) {
     console.error("Erreur chargement :", err);
     alert("Erreur de connexion au serveur.");
@@ -65,7 +63,7 @@ function afficherBenevole(id) {
   const b = benevoles.find(b => b.id == id);
   if (!b) return;
 
-  localisationEl.textContent = `Localisation : ${b.ville || "(inconnue)"}`;
+  localisationEl.textContent = `📍 Localisation : ${b.ville || "(inconnue)"}`;
 
   // 🧹 Réinitialiser les compteurs visuels à zéro
   for (const cat of categories) {
@@ -79,6 +77,12 @@ window.changerCompteur = function (id, valeur) {
   let n = parseInt(compteur.innerText);
   n = Math.max(0, n + valeur);
   compteur.innerText = n;
+  
+  // Animation de pulse
+  compteur.classList.add('highlight');
+  setTimeout(() => {
+    compteur.classList.remove('highlight');
+  }, 600);
 };
 
 // 🟪 Enregistrer la collecte (POST + PUT cumulatif avec points pondérés)
@@ -139,7 +143,8 @@ document.getElementById("registerBtn").addEventListener("click", async () => {
       throw new Error(`PUT bénévole échoué: ${txt2}`);
     }
 
-    alert("✅ Collecte ajoutée et bénévole mis à jour !");
+    // Afficher le badge de statut
+    showStatusBadge("✅ Collecte ajoutée et bénévole mis à jour !");
     await loadData();
     afficherBenevole(id_benevole);
     resetCompteursVisuels();
@@ -157,36 +162,15 @@ function resetCompteursVisuels() {
   }
 }
 
-// 🔹 Calculer et afficher les totaux globaux et le montant en euros
-async function calculerEtAfficherTotaux() {
-  try {
-    const resBenevoles = await fetch(`${API}/benevoles`);
-    const benevoles = await resBenevoles.json();
-    const nbrBenevoles = benevoles.length;
-
-    const resCollectes = await fetch(`${API}/collectes`);
-    const collectes = await resCollectes.json();
-
-    const totalDechets = collectes.reduce((sum, c) => sum + (c.quantite || 0), 0);
-    const totalPoints = collectes.reduce((sum, c) => sum + (c.points_dechet || 0), 0);
-
-    // Conversion points -> euros
-    let totalEuros = 0;
-    if (totalPoints >= 5000) totalEuros = 50;
-    else if (totalPoints >= 2000) totalEuros = 20;
-    else if (totalPoints >= 1000) totalEuros = 10;
-
-    const container = document.getElementById('totauxBenevoles');
-    if (container) {
-      container.innerHTML = `
-        <div>Total bénévoles : ${nbrBenevoles}</div>
-        <div>Total collectes : ${totalDechets}</div>
-        <div>Total points : ${totalPoints}</div>
-        <div>Total reversé en euros : ${totalEuros} €</div>
-      `;
-    }
-  } catch (err) {
-    console.error("Erreur calcul des totaux :", err);
+// 🔸 Afficher le badge de statut
+function showStatusBadge(message) {
+  const badge = document.getElementById('statusBadge');
+  if (badge) {
+    badge.textContent = message;
+    badge.classList.add('show');
+    setTimeout(() => {
+      badge.classList.remove('show');
+    }, 3000);
   }
 }
 
