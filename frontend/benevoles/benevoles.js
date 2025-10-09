@@ -14,6 +14,7 @@ const pointsParType = {
   cannette: 15
 };
 
+
 // 🟩 Charger les bénévoles et collectes depuis le serveur
 async function loadData() {
   try {

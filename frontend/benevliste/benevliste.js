@@ -83,7 +83,7 @@ function chargerCollectes() {
             const ul = document.createElement("ul");
             for (const type in regroupees) {
               const li = document.createElement("li");
-              li.textContent = `${type} - ${regroupees[type]} kg`;
+              li.textContent = `${type} - ${regroupees[type]} `;
               ul.appendChild(li);
             }
 

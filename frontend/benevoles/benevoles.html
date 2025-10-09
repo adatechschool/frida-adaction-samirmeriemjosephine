@@ -3,57 +3,126 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EcoAction Solidaire</title>
-  <link rel="stylesheet" href="benevole.css">
-  <script src="benevoles.js" defer></script>
+  <title>EcoAction Solidaire - Tableau de Bord Bénévoles</title>
+  <link rel="stylesheet" href="/frontend/benevoles/benevoles.css">
+  <script src="/frontend/benevoles/benevoles.js" defer></script>
 </head>
 <body>
-  <h1>EcoAction Solidaire</h1>
-  <h2>Collecte du jour</h2>
-  <h3 id="localisation">Localisation : </h3>
+  <div class="container">
+    <!-- En-tête -->
+    <header class="header">
+      <h1>🌱 EcoAction Solidaire</h1>
+      <p class="subtitle">Suivi des collectes en temps réel</p>
+    </header>
 
-  <div class="champ">
-    <label for="select-personne">Bénévoles :</label>
-    <select id="select-personne">
-      <option value="">Chargement...</option>
-    </select>
+    <!-- Section Informations -->
+    <section class="info-section">
+      <div class="localisation-card">
+        <h3 id="localisation">📍 Localisation : Chargement...</h3>
+      </div>
+
+      <div class="selection-card">
+        <label for="select-personne" class="selection-label">👥 Sélectionnez un bénévole :</label>
+        <select id="select-personne" class="selection-dropdown">
+          <option value="">Chargement des bénévoles...</option>
+        </select>
+      </div>
+    </section>
+
+    <!-- Section des Compteurs -->
+    <section class="compteurs-section">
+      <div class="categories-grid">
+        
+        <div class="catégorie" data-type="megots">
+          <div class="categorie-header">
+            <p>🚬 Mégots</p>
+          </div>
+          <div class="compteur-container">
+            <div class="compteur-group">
+              <span class="compteur-label">Collectés</span>
+              <div class="compteur-row">
+                <button class="btn-decrement" onclick="changerCompteur('megots', -1)">−</button>
+                <span id="megots" class="compteur">0</span>
+                <button class="btn-increment" onclick="changerCompteur('megots', 1)">+</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="catégorie" data-type="plastique">
+          <div class="categorie-header">
+            <p>🥤 Plastique</p>
+          </div>
+          <div class="compteur-container">
+            <div class="compteur-group">
+              <span class="compteur-label">Collectés</span>
+              <div class="compteur-row">
+                <button class="btn-decrement" onclick="changerCompteur('plastique', -1)">−</button>
+                <span id="plastique" class="compteur">0</span>
+                <button class="btn-increment" onclick="changerCompteur('plastique', 1)">+</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="catégorie" data-type="verre">
+          <div class="categorie-header">
+            <p>🍾 Verre</p>
+          </div>
+          <div class="compteur-container">
+            <div class="compteur-group">
+              <span class="compteur-label">Collectés</span>
+              <div class="compteur-row">
+                <button class="btn-decrement" onclick="changerCompteur('verre', -1)">−</button>
+                <span id="verre" class="compteur">0</span>
+                <button class="btn-increment" onclick="changerCompteur('verre', 1)">+</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="catégorie" data-type="peche">
+          <div class="categorie-header">
+            <p>🐟 Déchets Pêche</p>
+          </div>
+          <div class="compteur-container">
+            <div class="compteur-group">
+              <span class="compteur-label">Collectés</span>
+              <div class="compteur-row">
+                <button class="btn-decrement" onclick="changerCompteur('peche', -1)">−</button>
+                <span id="peche" class="compteur">0</span>
+                <button class="btn-increment" onclick="changerCompteur('peche', 1)">+</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="catégorie" data-type="cannette">
+          <div class="categorie-header">
+            <p>🥫 Cannettes</p>
+          </div>
+          <div class="compteur-container">
+            <div class="compteur-group">
+              <span class="compteur-label">Collectés</span>
+              <div class="compteur-row">
+                <button class="btn-decrement" onclick="changerCompteur('cannette', -1)">−</button>
+                <span id="cannette" class="compteur">0</span>
+                <button class="btn-increment" onclick="changerCompteur('cannette', 1)">+</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Bouton Enregistrer -->
+    <button id="registerBtn">💾 Enregistrer les données</button>
+
+    <!-- Badge de statut -->
+    <div id="statusBadge" class="status-badge">
+      Données enregistrées avec succès !
+    </div>
   </div>
-
-  <div class="catégorie">
-    <p>🚬</p>
-    <button onclick="changerCompteur('megots', -1)">-</button>
-    <span id="megots" class="compteur">0</span>
-    <button onclick="changerCompteur('megots', 1)">+</button>
-  </div>
-
-  <div class="catégorie">
-    <p>🥤</p>
-    <button onclick="changerCompteur('plastique', -1)">-</button>
-    <span id="plastique" class="compteur">0</span>
-    <button onclick="changerCompteur('plastique', 1)">+</button>
-  </div>
-
-  <div class="catégorie">
-    <p>🍾</p>
-    <button onclick="changerCompteur('verre', -1)">-</button>
-    <span id="verre" class="compteur">0</span>
-    <button onclick="changerCompteur('verre', 1)">+</button>
-  </div>
-
-  <div class="catégorie">
-    <p>🐟</p>
-    <button onclick="changerCompteur('peche', -1)">-</button>
-    <span id="peche" class="compteur">0</span>
-    <button onclick="changerCompteur('peche', 1)">+</button>
-  </div>
-
-  <div class="catégorie">
-    <p>🥫</p>
-    <button onclick="changerCompteur('cannette', -1)">-</button>
-    <span id="cannette" class="compteur">0</span>
-    <button onclick="changerCompteur('cannette', 1)">+</button>
-  </div>
-
-  <button id="registerBtn">Enregistrer</button>
 </body>
 </html>
